@@ -383,7 +383,7 @@
   </div>
 </div>
 
-<!-- Audio dynamique pour la voix -->
+<!-- Player audio -->
 <video id="voicePlayer" preload="auto" playsinline></video>
 
 <script type="module">
@@ -417,14 +417,15 @@ overlay.addEventListener('touchstart', enableSound);
 overlay.addEventListener('keydown', enableSound);
 document.addEventListener('click', enableSound, { once: true });
 
-// Fonction pour jouer la voix
+// Fonction pour jouer la voix via Google TTS
 function playVoice(numero) {
-  const audioURL = `https://chicanos-tech.github.io/MedecinEtienne/sons/patient_${numero}.mp3`;
+  const texte = encodeURIComponent(`Patient numéro ${numero}, veuillez vous présenter`);
+  const audioURL = `https://translate.google.com/translate_tts?ie=UTF-8&tl=fr&client=tw-ob&q=${texte}`;
   
   voicePlayer.src = audioURL;
-  voicePlayer.volume = 0.8;
+  voicePlayer.volume = 0.9;
   voicePlayer.play().catch(e => {
-    console.log("Erreur lecture audio:", e);
+    console.log("❌ Erreur lecture:", e);
   });
 }
 
@@ -451,7 +452,7 @@ onSnapshot(ref, (snap) => {
     void numberEl.offsetWidth;
     numberEl.classList.add("new-number");
 
-    // JOUER LA VOIX PRÉ-ENREGISTRÉE
+    // JOUER LA VOIX GOOGLE TTS
     playVoice(currentPatient);
   }
 });
