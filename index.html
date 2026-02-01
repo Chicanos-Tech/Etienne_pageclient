@@ -1,112 +1,256 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Salle d'attente</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salle d'attente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-  margin:0;
-  height:100vh;
-  font-family: 'Roboto', Arial, sans-serif;
-  background:#ffffff;
-  color:#202124;
-  display:flex;
-  flex-direction:column;
-}
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
 
-header{
-  text-align:center;
-  padding:24px;
-  font-size:4vh;
-  font-weight:500;
-  border-bottom:1px solid #e0e0e0;
-}
+    /* Animation de fond */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: moveBackground 20s linear infinite;
+      opacity: 0.3;
+    }
 
-.datetime{
-  text-align:center;
-  font-size:2.2vh;
-  color:#5f6368;
-  margin-top:10px;
-  padding-bottom:10px;
-}
+    @keyframes moveBackground {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
 
-.main{
-  flex:1;
-  display:flex;
-  justify-content:space-evenly;
-  align-items:center;
-  padding:40px;
-}
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      padding: 2.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+    }
 
-.box{
-  text-align:center;
-}
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
 
-.label{
-  font-size:3vh;
-  color:#5f6368;
-  margin-bottom:2vh;
-}
+    .datetime {
+      margin-top: 1rem;
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 300;
+    }
 
-.number{
-  font-size:12vh;
-  font-weight:500;
-}
+    /* Contenu principal */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 5;
+      padding: 4rem;
+    }
 
-.call{
-  padding:5vh 7vh;
-  border-radius:24px;
-  background:#f1f3f4;
-}
+    .label {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 2rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
 
-.call .number{
-  font-size:16vh;
-  color:#1a73e8;
-}
+    /* Carte numéro patient */
+    .patient-card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(30px);
+      border-radius: 40px;
+      padding: 5rem 8rem;
+      box-shadow: 
+        0 30px 90px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+      position: relative;
+      overflow: hidden;
+      animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: translateY(0);
+      transition: all 0.4s ease;
+    }
 
-.message{
-  margin-top:3vh;
-  font-size:3.5vh;
-  color:#202124;
-}
+    .patient-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
 
-.signature{
-  position:fixed;
-  bottom:12px;
-  right:15px;
-  font-size:1.3vh;
-  color:#9aa0a6;
-  opacity:0.6;
-}
-</style>
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .patient-number {
+      font-size: 15rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      position: relative;
+      z-index: 2;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .message {
+      margin-top: 3rem;
+      padding: 2rem 4rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 600;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+      position: relative;
+      z-index: 2;
+      animation: messageGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes messageGlow {
+      0%, 100% {
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+      }
+      50% {
+        box-shadow: 0 15px 60px rgba(102, 126, 234, 0.7);
+      }
+    }
+
+    /* Icône check */
+    .check-icon {
+      display: inline-block;
+      margin-right: 1rem;
+      font-size: 2.5rem;
+      animation: checkBounce 1s ease infinite;
+    }
+
+    @keyframes checkBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Footer signature */
+    .signature {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 2rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+
+    /* Animation d'apparition du numéro */
+    .patient-card.new-patient {
+      animation: newPatientAlert 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes newPatientAlert {
+      0% {
+        transform: scale(0.8) rotate(-5deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1) rotate(2deg);
+      }
+      100% {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>SALLE D'ATTENTE</header>
-<div class="datetime" id="time"></div>
+<header>
+  <h1>🏥 Salle d'attente</h1>
+  <div class="datetime" id="clock"></div>
+</header>
 
-<div class="main">
-
-  <div class="box">
-    <div class="label">Patient en cours</div>
-    <div class="number" id="encours">-</div>
+<div class="main-content">
+  <div class="label">Patient appelé</div>
+  
+  <div class="patient-card" id="patientCard">
+    <div class="patient-number" id="patientNumber">-</div>
   </div>
 
-  <div class="box call">
-    <div class="number" id="appele">-</div>
-    <div class="message">Veuillez vous présenter</div>
+  <div class="message">
+    <span class="check-icon">✓</span>
+    Veuillez vous présenter
   </div>
-
 </div>
 
 <div class="signature">
   Solution designed by NEXTGEN TECH
 </div>
 
+<!-- Son -->
 <audio id="beep">
-  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
 </audio>
 
 <script type="module">
@@ -123,37 +267,57 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const ref = doc(db, "tickets", "etat");
 
-let lastCall = null;
+let lastCalled = null;
 
+// Écoute des changements
 onSnapshot(ref, (snap) => {
   if (!snap.exists()) return;
   
-  const d = snap.data();
+  const data = snap.data();
+  const currentPatient = data.en_cours || data.appele || 0;
   
-  document.getElementById("encours").innerText = d.en_cours || "-";
-  document.getElementById("appele").innerText = d.appele || "-";
+  document.getElementById("patientNumber").innerText = currentPatient === 0 ? "-" : currentPatient;
 
-  if (d.appele !== undefined && d.appele !== lastCall && d.appele !== 0) {
-    lastCall = d.appele;
+  // Animation + son + voix quand nouveau patient
+  if (currentPatient !== lastCalled && currentPatient !== 0) {
+    lastCalled = currentPatient;
 
+    // Animation de la carte
+    const card = document.getElementById("patientCard");
+    card.classList.remove("new-patient");
+    void card.offsetWidth; // Force reflow
+    card.classList.add("new-patient");
+
+    // Son
     document.getElementById("beep").play();
 
-    const speech = new SpeechSynthesisUtterance(
-      `Le patient numéro ${d.appele} peut entrer`
+    // Voix
+    const msg = new SpeechSynthesisUtterance(
+      `Patient numéro ${currentPatient}, veuillez vous présenter`
     );
-    speech.lang = "fr-FR";
-    speech.rate = 0.9;
-    window.speechSynthesis.speak(speech);
+    msg.lang = "fr-FR";
+    msg.rate = 0.9;
+    msg.pitch = 1;
+    window.speechSynthesis.speak(msg);
   }
 });
 
-// Date & heure
-setInterval(() => {
-  const n = new Date();
-  document.getElementById("time").innerText =
-    n.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"}) +
-    " – " + n.toLocaleTimeString("fr-FR");
-}, 1000);
+// Horloge
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").innerText =
+    now.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }) +
+    " • " +
+    now.toLocaleTimeString("fr-FR");
+}
+
+setInterval(updateClock, 1000);
+updateClock();
 </script>
 
 </body>
