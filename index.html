@@ -265,7 +265,6 @@
       }
     }
 
-    /* OVERLAY PLEIN ÉCRAN CLIQUABLE */
     .sound-overlay {
       position: fixed;
       top: 0;
@@ -321,6 +320,15 @@
       font-weight: 400;
     }
 
+    /* Vidéo cachée */
+    #beepVideo {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     @media (max-width: 1200px) {
       .patient-number {
         font-size: 12rem;
@@ -335,7 +343,6 @@
 
 <body>
 
-<!-- OVERLAY PLEIN ÉCRAN CLIQUABLE -->
 <div class="sound-overlay" id="soundOverlay">
   <div class="sound-content">
     <div class="sound-icon">🔊</div>
@@ -377,9 +384,10 @@
   </div>
 </div>
 
-<audio id="beep" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
-</audio>
+<!-- VIDÉO au lieu d'AUDIO (astuce Samsung) -->
+<video id="beepVideo" preload="auto" playsinline>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</video>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -398,38 +406,31 @@ const ref = doc(db, "tickets", "etat");
 let lastCalled = null;
 let soundEnabled = false;
 const overlay = document.getElementById("soundOverlay");
-const beepSound = document.getElementById("beep");
+const beepVideo = document.getElementById("beepVideo");
 
-// FONCTION D'ACTIVATION MULTI-ÉVÉNEMENTS
+// Activation du son
 function enableSound() {
   if (soundEnabled) return;
   
   soundEnabled = true;
   overlay.classList.add("hidden");
   
-  // Test immédiat du son
-  beepSound.play().then(() => {
-    console.log("✅ Son activé avec succès");
+  // Jouer la vidéo pour activer l'audio
+  beepVideo.play().then(() => {
+    beepVideo.pause();
+    beepVideo.currentTime = 0;
+    console.log("✅ Audio activé via vidéo");
   }).catch(e => {
-    console.log("⚠️ Son bloqué:", e);
+    console.log("⚠️", e);
   });
-  
-  // Test de la voix
-  const testMsg = new SpeechSynthesisUtterance("Système activé");
-  testMsg.lang = "fr-FR";
-  testMsg.volume = 1;
-  window.speechSynthesis.speak(testMsg);
 }
 
-// ÉCOUTE DE TOUS LES ÉVÉNEMENTS POSSIBLES
 overlay.addEventListener('click', enableSound);
 overlay.addEventListener('touchstart', enableSound);
 overlay.addEventListener('keydown', enableSound);
 document.addEventListener('click', enableSound, { once: true });
-document.addEventListener('touchstart', enableSound, { once: true });
-document.addEventListener('keydown', enableSound, { once: true });
 
-// Écoute des changements Firebase
+// Écoute Firebase
 onSnapshot(ref, (snap) => {
   if (!snap.exists()) return;
   
@@ -439,26 +440,28 @@ onSnapshot(ref, (snap) => {
   const numberEl = document.getElementById("patientNumber");
   numberEl.innerText = currentPatient === 0 ? "-" : currentPatient;
 
-  // Animation + son + voix
   if (currentPatient !== lastCalled && currentPatient !== 0) {
     lastCalled = currentPatient;
 
-    // Animation carte
+    // Animation
     const card = document.getElementById("patientCard");
     card.classList.remove("new-patient");
     void card.offsetWidth;
     card.classList.add("new-patient");
 
-    // Animation numéro
     numberEl.classList.remove("new-number");
     void numberEl.offsetWidth;
     numberEl.classList.add("new-number");
 
     if (soundEnabled) {
-      // Son
-      beepSound.play().catch(e => console.log("Son:", e));
+      // Jouer un petit BIP via vidéo
+      beepVideo.volume = 0.3;
+      beepVideo.currentTime = 0;
+      beepVideo.play().then(() => {
+        setTimeout(() => beepVideo.pause(), 500);
+      });
 
-      // Voix
+      // VOIX (celle-ci devrait marcher maintenant)
       setTimeout(() => {
         const msg = new SpeechSynthesisUtterance(
           `Patient numéro ${currentPatient}, veuillez vous présenter`
@@ -467,9 +470,9 @@ onSnapshot(ref, (snap) => {
         msg.rate = 0.85;
         msg.pitch = 1;
         msg.volume = 1;
-        window.speechSynthesis.cancel(); // Annule les voix précédentes
+        window.speechSynthesis.cancel();
         window.speechSynthesis.speak(msg);
-      }, 400);
+      }, 600);
     }
   }
 });
