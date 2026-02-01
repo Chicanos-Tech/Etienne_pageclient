@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Salle d'attente</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -14,42 +16,78 @@
     }
 
     body {
-      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f8f9fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ffffff;
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Header */
+    /* Gradient subtil en fond */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60vh;
+      background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+      z-index: 0;
+    }
+
+    /* Header minimaliste */
     header {
-      background: white;
-      padding: 2rem 3rem;
-      text-align: center;
-      border-bottom: 3px solid #0066cc;
-      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding: 2rem 4rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+      z-index: 10;
     }
 
-    header h1 {
-      font-size: 2.8rem;
-      font-weight: 600;
-      color: #1a1a1a;
-      letter-spacing: 0.5px;
-      margin-bottom: 0.5rem;
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .header-icon {
-      color: #0066cc;
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
     }
 
     .datetime {
-      margin-top: 0.8rem;
-      font-size: 1.2rem;
-      color: #6c757d;
-      font-weight: 300;
+      font-size: 1rem;
+      color: #64748b;
+      font-weight: 500;
+      letter-spacing: -0.01em;
     }
 
     /* Contenu principal */
@@ -59,177 +97,204 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 4rem;
-      background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 3rem;
+      position: relative;
+      z-index: 5;
     }
 
     .label {
-      font-size: 2.2rem;
-      font-weight: 300;
-      color: #495057;
-      margin-bottom: 2.5rem;
-      letter-spacing: 1px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
-    /* Carte numéro patient */
+    /* Carte patient - style Apple/Stripe */
     .patient-card {
-      background: white;
-      border-radius: 30px;
-      padding: 5rem 9rem;
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 5rem 10rem;
       box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(0, 102, 204, 0.1);
+        0 0 0 1px rgba(0, 0, 0, 0.03),
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 4px 8px rgba(0, 0, 0, 0.04),
+        0 16px 32px rgba(0, 0, 0, 0.06);
       position: relative;
       overflow: hidden;
-      animation: cardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-      border: 2px solid #e9ecef;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Barre accent bleue */
     .patient-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, #0066cc 0%, #0099ff 100%);
-    }
-
-    @keyframes cardEntrance {
-      0% {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
     }
 
     .patient-number {
-      font-size: 14rem;
-      font-weight: 700;
-      color: #0066cc;
+      font-size: 16rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       line-height: 1;
+      letter-spacing: -0.04em;
       position: relative;
-      animation: numberPulse 2s ease-in-out infinite;
     }
 
-    @keyframes numberPulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.03);
-        opacity: 0.9;
-      }
-    }
-
-    .message {
-      margin-top: 3rem;
-      padding: 1.8rem 4rem;
-      background: #0066cc;
+    /* Badge message */
+    .message-badge {
+      margin-top: 3.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 3.5rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       color: white;
-      font-size: 2.3rem;
-      font-weight: 500;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 102, 204, 0.25);
-      animation: messageGlow 2s ease-in-out infinite;
+      font-size: 1.8rem;
+      font-weight: 600;
+      border-radius: 100px;
+      box-shadow: 
+        0 0 0 1px rgba(59, 130, 246, 0.1),
+        0 8px 24px rgba(59, 130, 246, 0.25),
+        0 16px 48px rgba(59, 130, 246, 0.15);
+      letter-spacing: -0.01em;
+      transition: all 0.3s ease;
     }
 
-    @keyframes messageGlow {
+    .message-icon {
+      width: 2rem;
+      height: 2rem;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem 4rem;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      z-index: 10;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .signature {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .status-dot {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dotPulse {
       0%, 100% {
-        box-shadow: 0 10px 30px rgba(0, 102, 204, 0.25);
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
       }
       50% {
-        box-shadow: 0 10px 40px rgba(0, 102, 204, 0.4);
+        opacity: 0.8;
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
       }
-    }
-
-    /* Icône */
-    .check-icon {
-      display: inline-block;
-      width: 2.5rem;
-      height: 2.5rem;
-      background: white;
-      color: #0066cc;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 2.5rem;
-      margin-right: 1rem;
-      font-weight: 700;
-      font-size: 1.8rem;
-    }
-
-    /* Footer signature */
-    .signature {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 2rem;
-      font-size: 0.85rem;
-      color: #adb5bd;
-      font-weight: 300;
-      letter-spacing: 0.5px;
     }
 
     /* Animation nouveau patient */
     .patient-card.new-patient {
-      animation: newPatientAlert 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: cardPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    @keyframes newPatientAlert {
+    @keyframes cardPop {
       0% {
-        transform: scale(0.9);
-        opacity: 0;
-        box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.4);
+        transform: scale(0.92);
+        opacity: 0.6;
       }
       50% {
-        box-shadow: 0 0 0 20px rgba(0, 102, 204, 0);
+        transform: scale(1.02);
       }
       100% {
         transform: scale(1);
         opacity: 1;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
       }
     }
 
-    /* Indicateur médical (optionnel) */
-    .medical-cross {
-      position: fixed;
-      top: 50%;
-      left: 5%;
-      transform: translateY(-50%);
-      font-size: 8rem;
-      color: rgba(0, 102, 204, 0.05);
-      z-index: 0;
+    .patient-number.new-number {
+      animation: numberScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .medical-cross-right {
-      position: fixed;
-      top: 50%;
-      right: 5%;
-      transform: translateY(-50%);
-      font-size: 8rem;
-      color: rgba(0, 102, 204, 0.05);
-      z-index: 0;
+    @keyframes numberScale {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.08);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .patient-number {
+        font-size: 12rem;
+      }
+      
+      .patient-card {
+        padding: 4rem 7rem;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<!-- Croix médicales décoratives -->
-<div class="medical-cross">✚</div>
-<div class="medical-cross-right">✚</div>
-
 <header>
-  <div class="header-icon">🏥</div>
-  <h1>Salle d'attente</h1>
-  <div class="datetime" id="clock"></div>
+  <div class="header-content">
+    <div class="logo">
+      <div class="logo-icon">🏥</div>
+      <div class="logo-text">Cabinet Médical</div>
+    </div>
+    <div class="datetime" id="clock"></div>
+  </div>
 </header>
 
 <div class="main-content">
@@ -239,14 +304,20 @@
     <div class="patient-number" id="patientNumber">-</div>
   </div>
 
-  <div class="message">
-    <span class="check-icon">✓</span>
-    Veuillez vous présenter
+  <div class="message-badge">
+    <div class="message-icon">✓</div>
+    <span>Veuillez vous présenter</span>
   </div>
 </div>
 
-<div class="signature">
-  Solution designed by NEXTGEN TECH
+<div class="footer">
+  <div class="footer-content">
+    <div class="signature">Designed by NEXTGEN TECH</div>
+    <div class="status-dot">
+      <div class="dot"></div>
+      Système actif
+    </div>
+  </div>
 </div>
 
 <!-- Son -->
@@ -277,44 +348,55 @@ onSnapshot(ref, (snap) => {
   const data = snap.data();
   const currentPatient = data.en_cours || data.appele || 0;
   
-  document.getElementById("patientNumber").innerText = currentPatient === 0 ? "-" : currentPatient;
+  const numberEl = document.getElementById("patientNumber");
+  numberEl.innerText = currentPatient === 0 ? "-" : currentPatient;
 
   // Animation + son + voix quand nouveau patient
   if (currentPatient !== lastCalled && currentPatient !== 0) {
     lastCalled = currentPatient;
 
-    // Animation de la carte
+    // Animation carte
     const card = document.getElementById("patientCard");
     card.classList.remove("new-patient");
-    void card.offsetWidth; // Force reflow
+    void card.offsetWidth;
     card.classList.add("new-patient");
+
+    // Animation numéro
+    numberEl.classList.remove("new-number");
+    void numberEl.offsetWidth;
+    numberEl.classList.add("new-number");
 
     // Son
     document.getElementById("beep").play();
 
     // Voix
-    const msg = new SpeechSynthesisUtterance(
-      `Patient numéro ${currentPatient}, veuillez vous présenter`
-    );
-    msg.lang = "fr-FR";
-    msg.rate = 0.9;
-    msg.pitch = 1;
-    window.speechSynthesis.speak(msg);
+    setTimeout(() => {
+      const msg = new SpeechSynthesisUtterance(
+        `Patient numéro ${currentPatient}, veuillez vous présenter`
+      );
+      msg.lang = "fr-FR";
+      msg.rate = 0.9;
+      msg.pitch = 1;
+      window.speechSynthesis.speak(msg);
+    }, 200);
   }
 });
 
 // Horloge
 function updateClock() {
   const now = new Date();
-  document.getElementById("clock").innerText =
-    now.toLocaleDateString("fr-FR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    }) +
-    " • " +
-    now.toLocaleTimeString("fr-FR");
+  const options = { 
+    weekday: 'long', 
+    day: 'numeric', 
+    month: 'long',
+    year: 'numeric'
+  };
+  const date = now.toLocaleDateString("fr-FR", options);
+  const time = now.toLocaleTimeString("fr-FR", { 
+    hour: '2-digit', 
+    minute: '2-digit'
+  });
+  document.getElementById("clock").innerText = `${date} • ${time}`;
 }
 
 setInterval(updateClock, 1000);
