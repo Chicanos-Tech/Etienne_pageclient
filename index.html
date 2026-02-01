@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Salle d'attente</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  font-family: 'Roboto', Arial, sans-serif;
+  background:#ffffff;
+  color:#202124;
+  display:flex;
+  flex-direction:column;
+}
+
+header{
+  text-align:center;
+  padding:24px;
+  font-size:4vh;
+  font-weight:500;
+  border-bottom:1px solid #e0e0e0;
+}
+
+.datetime{
+  text-align:center;
+  font-size:2.2vh;
+  color:#5f6368;
+  margin-top:10px;
+  padding-bottom:10px;
+}
+
+.main{
+  flex:1;
+  display:flex;
+  justify-content:space-evenly;
+  align-items:center;
+  padding:40px;
+}
+
+.box{
+  text-align:center;
+}
+
+.label{
+  font-size:3vh;
+  color:#5f6368;
+  margin-bottom:2vh;
+}
+
+.number{
+  font-size:12vh;
+  font-weight:500;
+}
+
+.call{
+  padding:5vh 7vh;
+  border-radius:24px;
+  background:#f1f3f4;
+}
+
+.call .number{
+  font-size:16vh;
+  color:#1a73e8;
+}
+
+.message{
+  margin-top:3vh;
+  font-size:3.5vh;
+  color:#202124;
+}
+
+.signature{
+  position:fixed;
+  bottom:12px;
+  right:15px;
+  font-size:1.3vh;
+  color:#9aa0a6;
+  opacity:0.6;
+}
+</style>
+</head>
+
+<body>
+
+<header>SALLE D'ATTENTE</header>
+<div class="datetime" id="time"></div>
+
+<div class="main">
+
+  <div class="box">
+    <div class="label">Patient en cours</div>
+    <div class="number" id="encours">-</div>
+  </div>
+
+  <div class="box call">
+    <div class="number" id="appele">-</div>
+    <div class="message">Veuillez vous présenter</div>
+  </div>
+
+</div>
+
+<div class="signature">
+  Solution designed by NEXTGEN TECH
+</div>
+
+<audio id="beep">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCYkKPiypMYMNuTHZ1itXPGSpRwGql92ZA",
+  authDomain: "medecinetienne-a92d1.firebaseapp.com",
+  projectId: "medecinetienne-a92d1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const ref = doc(db, "tickets", "etat");
+
+let lastCall = null;
+
+onSnapshot(ref, (snap) => {
+  if (!snap.exists()) return;
+  
+  const d = snap.data();
+  
+  document.getElementById("encours").innerText = d.en_cours || "-";
+  document.getElementById("appele").innerText = d.appele || "-";
+
+  if (d.appele !== undefined && d.appele !== lastCall && d.appele !== 0) {
+    lastCall = d.appele;
+
+    document.getElementById("beep").play();
+
+    const speech = new SpeechSynthesisUtterance(
+      `Le patient numéro ${d.appele} peut entrer`
+    );
+    speech.lang = "fr-FR";
+    speech.rate = 0.9;
+    window.speechSynthesis.speak(speech);
+  }
+});
+
+// Date & heure
+setInterval(() => {
+  const n = new Date();
+  document.getElementById("time").innerText =
+    n.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"}) +
+    " – " + n.toLocaleTimeString("fr-FR");
+}, 1000);
+</script>
+
+</body>
+</html>
